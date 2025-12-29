@@ -35,6 +35,7 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 # Remove lock files
 package-lock.json
 yarn.lock
+bun.lock
 pnpm-lock.yaml
 composer.lock
 Gemfile.lock
