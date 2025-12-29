@@ -1,8 +1,12 @@
+import { toNodeHandler } from 'better-auth/node';
 import cookieParse from 'cookie-parser';
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
+import { auth } from './lib/auth';
 import router from './router';
 const app: Application = express();
+
+app.all('/api/auth/*splat', toNodeHandler(auth));
 
 app.use(express.json());
 app.use(cookieParse());
