@@ -20,6 +20,7 @@
     "exclude": [
         "node_modules",
         ".serverless", // Exclude serverless directory
-        "dist" // Exclude compiled output by Typescript compiler
+        "dist", // Exclude compiled output by Typescript compiler,
+        "generated/prisma"
     ]
 }
