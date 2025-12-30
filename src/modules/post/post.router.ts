@@ -1,9 +1,12 @@
 import { Router } from 'express';
+import auth from '../../middlewares/auth.middlware';
+import UserConstants from '../user/user.constant';
 import postControllers from './post.controller';
 
 const PostRouter = Router();
+const { USER } = UserConstants.Roles;
 
-PostRouter.post('/', postControllers.createPost);
+PostRouter.post('/', auth(USER), postControllers.createPost);
 PostRouter.get('/', postControllers.getAllPosts);
 
 export default PostRouter;

@@ -3,7 +3,7 @@ import postServices from './post.service';
 
 const createPost = async (req: Request, res: Response) => {
     try {
-        const data = await postServices.createPost(req.body);
+        const data = await postServices.createPost(req.body, req?.user);
         return res.status(201).json({
             data,
         });

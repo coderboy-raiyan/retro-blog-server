@@ -10,6 +10,8 @@ const config = {
     APP_URL: process.env.APP_URL || 'http://localhost:3000',
     SMTP_PASS: process.env.SMTP_PASS,
     SMTP_USER: process.env.SMTP_USER,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 };
 
 export default config;

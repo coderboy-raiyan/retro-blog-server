@@ -1,4 +1,4 @@
-import { Post } from '../../../generated/prisma/client';
+import { Post, User } from '../../../generated/prisma/client';
 import { prisma } from '../../lib/prisma';
 
 const getAllPosts = async () => {
@@ -6,9 +6,15 @@ const getAllPosts = async () => {
     return result;
 };
 
-const createPost = async (payload: Omit<Post, 'id' | 'createdAt| updatedAt'>) => {
+const createPost = async (
+    payload: Omit<Post, 'id' | 'createdAt| updatedAt'>,
+    user: Partial<User>
+) => {
     const result = await prisma.post.create({
-        data: payload,
+        data: {
+            ...payload,
+            authorId: user?.id,
+        },
     });
     return result;
 };
