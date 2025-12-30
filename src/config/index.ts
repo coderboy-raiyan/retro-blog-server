@@ -6,7 +6,10 @@ configDotenv({ path: join(process.cwd(), '.env') });
 const config = {
     PORT: process.env.PORT || 5000,
     NODE_ENV: process.env.NODE_ENV as 'development' | 'production',
-    DB_URI: process.env.DB_URI,
+    DATABASE_URL: process.env.DATABASE_URL,
+    APP_URL: process.env.APP_URL || 'http://localhost:3000',
+    SMTP_PASS: process.env.SMTP_PASS,
+    SMTP_USER: process.env.SMTP_USER,
 };
 
 export default config;
