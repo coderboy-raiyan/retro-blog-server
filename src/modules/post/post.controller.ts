@@ -13,7 +13,8 @@ const createPost = async (req: Request, res: Response) => {
 };
 const getAllPosts = async (req: Request, res: Response) => {
     try {
-        const data = await postServices.getAllPosts();
+        const searchParams = new URLSearchParams((req?.query as Record<string, string>) || {});
+        const data = await postServices.getAllPosts(searchParams);
         return res.status(201).json({
             data,
         });
