@@ -8,6 +8,7 @@ const config = {
     NODE_ENV: process.env.NODE_ENV as 'development' | 'production',
     DATABASE_URL: process.env.DATABASE_URL,
     APP_URL: process.env.APP_URL || 'http://localhost:3000',
+    BETTER_AUTH_URL: process.env.BETTER_AUTH_URL || 'http://localhost:5000',
     SMTP_PASS: process.env.SMTP_PASS,
     SMTP_USER: process.env.SMTP_USER,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,

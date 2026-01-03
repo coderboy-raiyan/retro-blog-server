@@ -6,6 +6,7 @@
         "dev": "rm -rf package-lock.json && bun install && bun --watch src/server.ts",
         "build": "rm -rf bun.lock && npm install && rm -rf dist && tsc",
         "start": "node dist/src/server.js",
+        "seed:admin": "npx tsx src/scripts/seedAdmin.ts",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write \"src/**/*.ts\"",
@@ -35,6 +36,7 @@
     "dependencies": {
         "@prisma/adapter-pg": "^7.2.0",
         "@prisma/client": "^7.2.0",
+        "axios": "^1.13.2",
         "better-auth": "^1.4.9",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
