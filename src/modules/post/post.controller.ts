@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import catchAsyncError from '../../utils/catchAsyncError';
+import catchAsyncError from '../../utils/catchAsyncError.utils';
 import sendResponse from '../../utils/sendResponse';
 import postServices from './post.service';
 

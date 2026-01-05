@@ -1,12 +1,17 @@
 import { Router } from 'express';
-import PostRouter from '../modules/post/post.router';
+import commentRouter from '../modules/comment/comment.router';
+import postRouter from '../modules/post/post.router';
 
 const router = Router();
 
 const routes = [
     {
         path: '/posts',
-        route: PostRouter,
+        route: postRouter,
+    },
+    {
+        path: '/comments',
+        route: commentRouter,
     },
 ];
 
