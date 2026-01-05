@@ -4,7 +4,7 @@ type TResponse<T> = {
     success: boolean;
     status: number;
     message: string;
-    data: T;
+    data?: T;
 };
 
 function sendResponse<T>(res: Response, { status, success, message, data }: TResponse<T>) {

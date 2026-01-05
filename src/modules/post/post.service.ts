@@ -113,15 +113,25 @@ const createPost = async (
 };
 
 const getPostById = async (postId: string) => {
-    const post = await prisma.post.findUnique({
-        where: {
-            id: postId,
-        },
+    const result = await prisma.$transaction(async tx => {
+        await tx.post.update({
+            where: {
+                id: postId,
+            },
+            data: {
+                views: {
+                    increment: 1,
+                },
+            },
+        });
+        const post = await tx.post.findUnique({
+            where: {
+                id: postId,
+            },
+        });
+        return post;
     });
-    if (!post) {
-        throw new Error('No post found!');
-    }
-    return post;
+    return result;
 };
 
 const postServices = {
