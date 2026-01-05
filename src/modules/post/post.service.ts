@@ -1,10 +1,11 @@
 import { Post, User } from '../../../generated/prisma/client';
-import { EnumPostStatusFilter, PostWhereInput } from '../../../generated/prisma/models';
+import { EnumPostStatusFilter } from '../../../generated/prisma/models';
 import { prisma } from '../../lib/prisma';
+import paginationSortingHelper, { TSortOrder } from '../../utils/paginationSorting.utils';
 import PostConstants from './post.constant';
 
 const getAllPosts = async (searchParams?: URLSearchParams) => {
-    const additionalFields: PostWhereInput[] = [];
+    const additionalFields = [];
 
     if (searchParams.has('search')) {
         const search = searchParams?.get('search');
@@ -65,12 +66,37 @@ const getAllPosts = async (searchParams?: URLSearchParams) => {
         });
     }
 
-    const result = await prisma.post.findMany({
+    const { skip, limit, orderBy, page } = paginationSortingHelper({
+        page: searchParams?.get('page'),
+        limit: searchParams?.get('limit'),
+        sortBy: searchParams?.get('sortBy'),
+        sortOrder: searchParams?.get('sortOrder') as TSortOrder,
+    });
+
+    const posts = await prisma.post.findMany({
+        where: {
+            AND: additionalFields,
+        },
+        skip,
+        take: limit,
+        orderBy,
+    });
+
+    const total = await prisma.post.count({
         where: {
             AND: additionalFields,
         },
     });
-    return result;
+
+    return {
+        data: posts,
+        pagination: {
+            total,
+            page,
+            limit,
+            totalPage: Math.ceil(total / limit),
+        },
+    };
 };
 
 const createPost = async (
@@ -86,9 +112,22 @@ const createPost = async (
     return result;
 };
 
+const getPostById = async (postId: string) => {
+    const post = await prisma.post.findUnique({
+        where: {
+            id: postId,
+        },
+    });
+    if (!post) {
+        throw new Error('No post found!');
+    }
+    return post;
+};
+
 const postServices = {
     createPost,
     getAllPosts,
+    getPostById,
 };
 
 export default postServices;
