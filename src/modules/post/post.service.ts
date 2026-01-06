@@ -81,6 +81,11 @@ const getAllPosts = async (searchParams?: URLSearchParams) => {
         skip,
         take: limit,
         orderBy,
+        include: {
+            _count: {
+                select: { comments: true },
+            },
+        },
     });
 
     const total = await prisma.post.count({

@@ -13,9 +13,39 @@ const createComment = catchAsyncError(async (req: Request, res: Response) => {
         data,
     });
 });
+const getCommentById = catchAsyncError(async (req: Request, res: Response) => {
+    const data = await commentServices.getCommentById(req?.params?.id);
+    return sendResponse(res, {
+        status: StatusCodes.OK,
+        success: true,
+        message: 'Comment retrieved successfully',
+        data,
+    });
+});
+const getCommentsByAuthorId = catchAsyncError(async (req: Request, res: Response) => {
+    const data = await commentServices.getCommentsByAuthor(req?.user?.id);
+    return sendResponse(res, {
+        status: StatusCodes.OK,
+        success: true,
+        message: 'Author comments retrieved successfully',
+        data,
+    });
+});
+const deleteComment = catchAsyncError(async (req: Request, res: Response) => {
+    const data = await commentServices.deleteComment(req?.params?.id, req?.user);
+    return sendResponse(res, {
+        status: StatusCodes.OK,
+        success: true,
+        message: 'comment deleted successfully',
+        data,
+    });
+});
 
 const commentControllers = {
     createComment,
+    getCommentById,
+    getCommentsByAuthorId,
+    deleteComment,
 };
 
 export default commentControllers;

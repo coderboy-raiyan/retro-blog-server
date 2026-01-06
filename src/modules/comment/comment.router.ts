@@ -7,6 +7,9 @@ const commentRouter = Router();
 
 const { USER, ADMIN } = UserConstants.Roles;
 
+commentRouter.get('/author', auth(USER, ADMIN), commentControllers.getCommentsByAuthorId);
+commentRouter.get('/:id', commentControllers.getCommentById);
+commentRouter.delete('/:id', auth(USER, ADMIN), commentControllers.deleteComment);
 commentRouter.post('/', auth(USER, ADMIN), commentControllers.createComment);
 
 export default commentRouter;
