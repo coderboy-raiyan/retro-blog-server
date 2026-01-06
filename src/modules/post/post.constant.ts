@@ -1,8 +1,10 @@
+import { PostStatus } from '../../../generated/prisma/enums';
+
 const postStatus = {
     DRAFT: 'DRAFT',
     PUBLISHED: 'PUBLISHED',
     ARCHIVED: 'ARCHIVED',
-} as const;
+} as const satisfies Record<PostStatus, PostStatus>;
 
 const PostConstants = {
     postStatus,

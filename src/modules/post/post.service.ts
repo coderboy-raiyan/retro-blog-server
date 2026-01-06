@@ -2,6 +2,7 @@ import { Post, User } from '../../../generated/prisma/client';
 import { EnumPostStatusFilter } from '../../../generated/prisma/models';
 import { prisma } from '../../lib/prisma';
 import paginationSortingHelper, { TSortOrder } from '../../utils/paginationSorting.utils';
+import commentConstants from '../comment/comment.constant';
 import PostConstants from './post.constant';
 
 const getAllPosts = async (searchParams?: URLSearchParams) => {
@@ -127,6 +128,36 @@ const getPostById = async (postId: string) => {
         const post = await tx.post.findUnique({
             where: {
                 id: postId,
+            },
+            include: {
+                comments: {
+                    orderBy: {
+                        createdAt: 'desc',
+                    },
+                    where: {
+                        parentId: null,
+                        status: commentConstants.CommentStatus.APPROVED,
+                    },
+                    include: {
+                        replies: {
+                            where: {
+                                status: commentConstants.CommentStatus.APPROVED,
+                            },
+                            include: {
+                                replies: {
+                                    where: {
+                                        status: commentConstants.CommentStatus.APPROVED,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                _count: {
+                    select: {
+                        comments: true,
+                    },
+                },
             },
         });
         return post;

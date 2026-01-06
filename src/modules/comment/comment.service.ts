@@ -16,13 +16,15 @@ const createComment = async (payload: {
     if (!post) {
         throw new AppError(StatusCodes.NOT_FOUND, 'Post not found!');
     }
-    const parent = await prisma.post.findUnique({
-        where: {
-            id: payload?.parentId,
-        },
-    });
-    if (!parent) {
-        throw new AppError(StatusCodes.NOT_FOUND, 'Parent not found!');
+    if (payload?.parentId) {
+        const parent = await prisma.comment.findUnique({
+            where: {
+                id: payload?.parentId,
+            },
+        });
+        if (!parent) {
+            throw new AppError(StatusCodes.NOT_FOUND, 'Parent not found!');
+        }
     }
 
     const result = await prisma.comment.create({
