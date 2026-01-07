@@ -49,6 +49,15 @@ const updateComment = catchAsyncError(async (req: Request, res: Response) => {
         data,
     });
 });
+const moderateComment = catchAsyncError(async (req: Request, res: Response) => {
+    const data = await commentServices.moderateComment(req?.params?.id, req.body);
+    return sendResponse(res, {
+        status: StatusCodes.OK,
+        success: true,
+        message: 'comment updated successfully',
+        data,
+    });
+});
 
 const commentControllers = {
     createComment,
@@ -56,6 +65,7 @@ const commentControllers = {
     getCommentsByAuthorId,
     deleteComment,
     updateComment,
+    moderateComment,
 };
 
 export default commentControllers;

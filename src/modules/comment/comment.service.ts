@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { Comment, User } from '../../../generated/prisma/client';
+import { Comment, CommentStatus, User } from '../../../generated/prisma/client';
 import { prisma } from '../../lib/prisma';
 import AppError from '../../utils/AppError.utils';
 import UserConstants from '../user/user.constant';
@@ -123,12 +123,44 @@ const updateComment = async (commentId: string, data: Partial<Comment>, user: Pa
     return updatedComment;
 };
 
+const moderateComment = async (commentId: string, data: Partial<Comment>) => {
+    const comment = await prisma.comment.findUnique({
+        where: {
+            id: commentId,
+        },
+    });
+    if (!comment) {
+        throw new AppError(StatusCodes.NOT_FOUND, 'Comment not found!');
+    }
+    if (!data?.status || !Object.values(CommentStatus).includes(data?.status)) {
+        throw new AppError(StatusCodes.BAD_REQUEST, 'Invalid input!');
+    }
+    if (data?.status === comment?.status) {
+        throw new AppError(StatusCodes.BAD_REQUEST, `${data?.status} is already up to date!`);
+    }
+    const updatedComment = await prisma.comment.update({
+        where: {
+            id: comment?.id,
+        },
+        data: {
+            status: data?.status,
+        },
+        select: {
+            id: true,
+            content: true,
+            status: true,
+        },
+    });
+    return updatedComment;
+};
+
 const commentServices = {
     createComment,
     getCommentById,
     getCommentsByAuthor,
     deleteComment,
     updateComment,
+    moderateComment,
 };
 
 export default commentServices;

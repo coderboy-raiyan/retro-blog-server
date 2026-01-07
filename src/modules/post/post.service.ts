@@ -1,9 +1,8 @@
-import { Post, User } from '../../../generated/prisma/client';
+import { Post, PostStatus, User } from '../../../generated/prisma/client';
 import { EnumPostStatusFilter } from '../../../generated/prisma/models';
 import { prisma } from '../../lib/prisma';
 import paginationSortingHelper, { TSortOrder } from '../../utils/paginationSorting.utils';
 import commentConstants from '../comment/comment.constant';
-import PostConstants from './post.constant';
 
 const getAllPosts = async (searchParams?: URLSearchParams) => {
     const additionalFields = [];
@@ -54,7 +53,7 @@ const getAllPosts = async (searchParams?: URLSearchParams) => {
 
     if (
         searchParams.has('status') &&
-        Object.keys(PostConstants.postStatus).includes(searchParams.get('status'))
+        Object.keys(PostStatus).includes(searchParams.get('status'))
     ) {
         additionalFields.push({
             status: searchParams.get('status') as EnumPostStatusFilter<'Post'>,
