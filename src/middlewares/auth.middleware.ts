@@ -20,7 +20,12 @@ function auth(...roles: TUserRole[]) {
                     message: 'Please verify your email!',
                 });
             }
-
+            if (!session?.user?.status || session?.user?.status !== 'ACTIVE') {
+                return res.status(401).json({
+                    success: false,
+                    message: `Account [${session?.user?.email}] has been disabled by our policy. Go to support`,
+                });
+            }
             if (roles.length && !roles.includes(session?.user?.role as TUserRole)) {
                 return res.status(403).json({
                     success: false,

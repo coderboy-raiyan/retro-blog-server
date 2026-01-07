@@ -34,11 +34,21 @@ const getPostById = catchAsyncError(async (req: Request, res: Response) => {
         data,
     });
 });
+const getMyPosts = catchAsyncError(async (req: Request, res: Response) => {
+    const data = await postServices.getMyPosts(req?.user);
+    return sendResponse(res, {
+        status: StatusCodes.OK,
+        success: true,
+        message: 'Posts retrieved successfully',
+        data,
+    });
+});
 
 const postControllers = {
     createPost,
     getAllPosts,
     getPostById,
+    getMyPosts,
 };
 
 export default postControllers;
