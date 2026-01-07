@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { User } from '../../../generated/prisma/client';
+import { Comment, User } from '../../../generated/prisma/client';
 import { prisma } from '../../lib/prisma';
 import AppError from '../../utils/AppError.utils';
 import UserConstants from '../user/user.constant';
@@ -68,6 +68,7 @@ const getCommentsByAuthor = async (authorId: string) => {
     });
     return comments;
 };
+
 const deleteComment = async (id: string, user: Partial<User>) => {
     let comment = await prisma.comment.findUnique({
         where: {
@@ -98,11 +99,36 @@ const deleteComment = async (id: string, user: Partial<User>) => {
     return deletedComment;
 };
 
+const updateComment = async (commentId: string, data: Partial<Comment>, user: Partial<User>) => {
+    const comment = await prisma.comment.findUnique({
+        where: {
+            id: commentId,
+            authorId: user?.id,
+        },
+    });
+    if (!comment) {
+        throw new AppError(StatusCodes.NOT_FOUND, 'Comment not found!');
+    }
+    if (user?.id !== comment?.authorId) {
+        throw new AppError(StatusCodes.BAD_REQUEST, 'Not allowed to delete this comment!');
+    }
+
+    const updatedComment = await prisma.comment.update({
+        where: {
+            id: comment?.id,
+            authorId: user?.id,
+        },
+        data,
+    });
+    return updatedComment;
+};
+
 const commentServices = {
     createComment,
     getCommentById,
     getCommentsByAuthor,
     deleteComment,
+    updateComment,
 };
 
 export default commentServices;

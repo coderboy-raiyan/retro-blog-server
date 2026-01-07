@@ -40,12 +40,22 @@ const deleteComment = catchAsyncError(async (req: Request, res: Response) => {
         data,
     });
 });
+const updateComment = catchAsyncError(async (req: Request, res: Response) => {
+    const data = await commentServices.updateComment(req?.params?.id, req.body, req?.user);
+    return sendResponse(res, {
+        status: StatusCodes.OK,
+        success: true,
+        message: 'comment updated successfully',
+        data,
+    });
+});
 
 const commentControllers = {
     createComment,
     getCommentById,
     getCommentsByAuthorId,
     deleteComment,
+    updateComment,
 };
 
 export default commentControllers;
