@@ -52,6 +52,15 @@ const updatePost = catchAsyncError(async (req: Request, res: Response) => {
         data,
     });
 });
+const deletePost = catchAsyncError(async (req: Request, res: Response) => {
+    const data = await postServices.deletePost(req?.params?.id, req?.user);
+    return sendResponse(res, {
+        status: StatusCodes.OK,
+        success: true,
+        message: 'Post deleted successfully',
+        data,
+    });
+});
 
 const postControllers = {
     createPost,
@@ -59,6 +68,7 @@ const postControllers = {
     getPostById,
     getMyPosts,
     updatePost,
+    deletePost,
 };
 
 export default postControllers;

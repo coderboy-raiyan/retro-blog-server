@@ -10,6 +10,7 @@ postRouter.post('/', auth(USER), postControllers.createPost);
 postRouter.get('/me', auth(USER, ADMIN), postControllers.getMyPosts);
 postRouter.get('/:id', postControllers.getPostById);
 postRouter.patch('/:id', auth(USER, ADMIN), postControllers.updatePost);
+postRouter.delete('/:id', auth(USER, ADMIN), postControllers.deletePost);
 postRouter.get('/', postControllers.getAllPosts);
 
 export default postRouter;

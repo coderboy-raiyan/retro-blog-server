@@ -205,7 +205,6 @@ const updatePost = async (postId: string, data: Partial<Post>, user: Partial<Use
     const post = await prisma.post.findUnique({
         where: {
             id: postId,
-            authorId: user?.id,
         },
     });
     if (!post) {
@@ -225,6 +224,26 @@ const updatePost = async (postId: string, data: Partial<Post>, user: Partial<Use
     });
     return result;
 };
+const deletePost = async (postId: string, user: Partial<User>) => {
+    const post = await prisma.post.findUnique({
+        where: {
+            id: postId,
+        },
+    });
+    if (!post) {
+        throw new AppError(StatusCodes.NOT_FOUND, 'Post not found!');
+    }
+    if (post?.authorId !== user?.id && user?.role !== UserConstants.Roles.ADMIN) {
+        throw new AppError(StatusCodes.UNAUTHORIZED, 'You are not allowed to edit this post!');
+    }
+
+    const result = await prisma.post.delete({
+        where: {
+            id: postId,
+        },
+    });
+    return result;
+};
 
 const postServices = {
     createPost,
@@ -232,6 +251,7 @@ const postServices = {
     getPostById,
     getMyPosts,
     updatePost,
+    deletePost,
 };
 
 export default postServices;
