@@ -1,8 +1,11 @@
+import { StatusCodes } from 'http-status-codes';
 import { Post, PostStatus, User } from '../../../generated/prisma/client';
 import { EnumPostStatusFilter } from '../../../generated/prisma/models';
 import { prisma } from '../../lib/prisma';
+import AppError from '../../utils/AppError.utils';
 import paginationSortingHelper, { TSortOrder } from '../../utils/paginationSorting.utils';
 import commentConstants from '../comment/comment.constant';
+import UserConstants from '../user/user.constant';
 
 const getAllPosts = async (searchParams?: URLSearchParams) => {
     const additionalFields = [];
@@ -198,11 +201,37 @@ const getMyPosts = async ({ id }: Partial<User>) => {
     return { posts: posts, total };
 };
 
+const updatePost = async (postId: string, data: Partial<Post>, user: Partial<User>) => {
+    const post = await prisma.post.findUnique({
+        where: {
+            id: postId,
+            authorId: user?.id,
+        },
+    });
+    if (!post) {
+        throw new AppError(StatusCodes.NOT_FOUND, 'Post not found!');
+    }
+    if (post?.authorId !== user?.id && user?.role !== UserConstants.Roles.ADMIN) {
+        throw new AppError(StatusCodes.UNAUTHORIZED, 'You are not allowed to edit this post!');
+    }
+    if (user?.role !== UserConstants.Roles.ADMIN) {
+        delete data?.isFeature;
+    }
+    const result = await prisma.post.update({
+        where: {
+            id: postId,
+        },
+        data,
+    });
+    return result;
+};
+
 const postServices = {
     createPost,
     getAllPosts,
     getPostById,
     getMyPosts,
+    updatePost,
 };
 
 export default postServices;

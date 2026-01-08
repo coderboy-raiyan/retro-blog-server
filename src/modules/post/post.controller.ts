@@ -43,12 +43,22 @@ const getMyPosts = catchAsyncError(async (req: Request, res: Response) => {
         data,
     });
 });
+const updatePost = catchAsyncError(async (req: Request, res: Response) => {
+    const data = await postServices.updatePost(req?.params?.id, req?.body, req?.user);
+    return sendResponse(res, {
+        status: StatusCodes.OK,
+        success: true,
+        message: 'Post updated successfully',
+        data,
+    });
+});
 
 const postControllers = {
     createPost,
     getAllPosts,
     getPostById,
     getMyPosts,
+    updatePost,
 };
 
 export default postControllers;
