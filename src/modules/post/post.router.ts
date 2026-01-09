@@ -7,6 +7,7 @@ const postRouter = Router();
 const { USER, ADMIN } = UserConstants.Roles;
 
 postRouter.post('/', auth(USER), postControllers.createPost);
+postRouter.get('/stats', postControllers.getStats);
 postRouter.get('/me', auth(USER, ADMIN), postControllers.getMyPosts);
 postRouter.get('/:id', postControllers.getPostById);
 postRouter.patch('/:id', auth(USER, ADMIN), postControllers.updatePost);
