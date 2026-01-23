@@ -46,11 +46,12 @@ const getAllPosts = async (searchParams?: URLSearchParams) => {
 
     if (
         searchParams.has('isFeature') &&
-        (searchParams.get('isFeature') === 'true' || searchParams.get('isFeature') === 'false')
+        (String(searchParams.get('isFeature')).trim().toLowerCase() === 'true' ||
+            String(searchParams.get('isFeature')).trim().toLowerCase() === 'false')
     ) {
-        const isFeature = Boolean(searchParams.get('isFeature'));
+        const isFeature = String(searchParams.get('isFeature')).trim().toLowerCase();
         additionalFields.push({
-            isFeature: isFeature,
+            isFeature: JSON.parse(isFeature),
         });
     }
 
